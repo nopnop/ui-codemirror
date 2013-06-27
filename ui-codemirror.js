@@ -7,7 +7,6 @@ angular.module('ui.codemirror', [])
   .directive('uiCodemirror', ['uiCodemirrorConfig', '$timeout', function (uiCodemirrorConfig, $timeout) {
     'use strict';
 
-    var events = ["cursorActivity", "viewportChange", "gutterClick", "focus", "blur", "scroll", "update"];
     return {
       restrict: 'A',
       require: 'ngModel',
@@ -38,15 +37,11 @@ angular.module('ui.codemirror', [])
           codeMirror = CodeMirror.fromTextArea(elm[0], opts);
           codeMirror.on("change", onChange(opts.onChange));
 
-          for (var i = 0, n = events.length, aEvent; i < n; ++i) {
-            aEvent = opts["on" + events[i].charAt(0).toUpperCase() + events[i].slice(1)];
-            if (aEvent === void 0) {
-              continue;
-            }
-            if (typeof aEvent !== "function") {
-              continue;
-            }
-            codeMirror.on(events[i], aEvent);
+          if(opts.events) {
+            Object.keys(opts.events).forEach(function(key) {
+              console.log('event : %s', key)
+              codeMirror.on(key, opts.events[key]);
+            })
           }
 
           // CodeMirror expects a string, so make sure it gets one.
@@ -75,6 +70,9 @@ angular.module('ui.codemirror', [])
                 $timeout(function(){codeMirror.refresh();});
               }
             });
+          }
+          if(opts.events && opts.events.ready) {
+            opts.events.ready(codeMirror);
           }
         };
 
