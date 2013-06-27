@@ -39,7 +39,6 @@ angular.module('ui.codemirror', [])
 
           if(opts.events) {
             Object.keys(opts.events).forEach(function(key) {
-              console.log('event : %s', key)
               codeMirror.on(key, opts.events[key]);
             })
           }
