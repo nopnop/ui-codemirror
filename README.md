@@ -85,16 +85,18 @@ _The ui-codemirror directive stores and expects the model value to be a standard
 
 ## ui-codemirror events
 The [CodeMirror events](http://codemirror.net/doc/manual.html#events) are supported has configuration options.
-They keep the same name but are prefixed by _on_..
+They keep the same name and must be added to the `events` options.
 _This directive expects the events to be javascript Functions._
-For example to handle changes of in the editor, we use _onChange_
+For example to handle changes of in the editor, we use _events.change_
 
 ```html
 <textarea ui-codemirror="{
             lineWrapping : true,
             lineNumbers: true,
             mode: 'javascript',
-            onChange: reParseInput
+            events: {
+                change: reParseInput
+            }
         }" ng-model="x"></textarea>
 ```
 
@@ -107,6 +109,24 @@ $scope.reParseInput = function(){
 	pending = $timeout($scope.workHere, 500);
 };
 ```
+
+## ui-codemirror ready event
+
+To retrieve the CodeMirror instance use the `ready` event:
+
+```javascript
+myAppModule.controller('MyController', [ '$scope', function($scope) {
+    $scope.editorOptions = {
+        events: {
+            ready: function(codeMirror) {
+                console.log('Code mirror instance:', codeMirror)
+            }
+        }
+    }
+}]);
+
+```
+
 
 ## ui-refresh directive
 
